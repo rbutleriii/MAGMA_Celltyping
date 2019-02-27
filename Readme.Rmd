@@ -1,3 +1,6 @@
+## Exactly the same as the original, but with:
+- renamed ctd datasets so they don't overwrite one another
+- linux friendly versions of the R scripts for GWAS dataset prep
 ---
 title: "Using MAGMA to find causative celltypes for genetically complex traits using MAGMA"
 author: "Nathan Skene & Julien Bryois"
