@@ -72,7 +72,7 @@ format_sumstats_for_magma_linux <- function(path){
         # Check if there is a column of data with CHR:BP format
         twoStepCol = grep(".*:.*",row_of_data)
         print("CHR:BP column found, splitting...")
-        if(length(twoStepCol) & !four_colon_col){
+        if(length(twoStepCol) & !isTRUE(four_colon_col)){
             # Convert the ':' into '\t'
             awkSplitCmd = sprintf("gawk -i inplace -F\":\" '$1=$1' OFS=\"\t\" %s",path,path)
             system2("/bin/bash", args = c("-c", shQuote(awkSplitCmd)))
