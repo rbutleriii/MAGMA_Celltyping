@@ -45,9 +45,11 @@ format_sumstats_for_magma_linux <- function(path){
         
         # Obtain a row of the actual data
         con <- file(path,"r") ; row_of_data <- strsplit(readLines(con,n=2)[2],"\t")[[1]] ; close(con)
+        four_colon_col = NULL
         
         # Check if there is a column of data with CHR:BP:A2:A1 format
         fourStepCol = grep(".*:.*:\\w:\\w",row_of_data)
+        print("CHR:BP:A1:A2 column found, splitting...")
         if(length(fourStepCol)){
             # Convert the ':' into '\t'
             awkSplitCmd = sprintf("gawk -i inplace -F\":\" '$1=$1' OFS=\"\t\" %s",path,path)
@@ -63,11 +65,14 @@ format_sumstats_for_magma_linux <- function(path){
             print(sprintf("Column %s has been replaced with CHR BP A2 A1",curColName))
             print(col_headers)
             con <- file(path,"r") ; row_of_data <- strsplit(readLines(con,n=2)[2],"\t")[[1]] ; close(con)
+            # Add a skip condition to twoStepCol below
+            four_colon_col = TRUE
         }
         
         # Check if there is a column of data with CHR:BP format
         twoStepCol = grep(".*:.*",row_of_data)
-        if(length(twoStepCol)){
+        print("CHR:BP column found, splitting...")
+        if(length(twoStepCol) & !four_colon_col){
             # Convert the ':' into '\t'
             awkSplitCmd = sprintf("gawk -i inplace -F\":\" '$1=$1' OFS=\"\t\" %s",path,path)
             system2("/bin/bash", args = c("-c", shQuote(awkSplitCmd)))
