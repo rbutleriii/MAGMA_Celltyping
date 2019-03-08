@@ -52,7 +52,7 @@ format_sumstats_for_magma_linux <- function(path){
         print("CHR:BP:A1:A2 column found, splitting...")
         if(length(fourStepCol)){
             # Convert the ':' into '\t'
-            awkSplitCmd = sprintf("gawk -i inplace -F\":\" '$1=$1' OFS=\"\t\" %s",path,path)
+            awkSplitCmd = sprintf("gawk -i inplace -F\":\" '$1=$1' OFS=\"\t\" %s",path)
             system2("/bin/bash", args = c("-c", shQuote(awkSplitCmd)))
             # Replace the column name with four names
             curColName = col_headers[fourStepCol]
@@ -74,7 +74,7 @@ format_sumstats_for_magma_linux <- function(path){
         print("CHR:BP column found, splitting...")
         if(length(twoStepCol) & !isTRUE(four_colon_col)){
             # Convert the ':' into '\t'
-            awkSplitCmd = sprintf("gawk -i inplace -F\":\" '$1=$1' OFS=\"\t\" %s",path,path)
+            awkSplitCmd = sprintf("gawk -i inplace -F\":\" '$1=$1' OFS=\"\t\" %s",path)
             system2("/bin/bash", args = c("-c", shQuote(awkSplitCmd)))
             # Replace the column name with four names
             curColName = col_headers[twoStepCol]
