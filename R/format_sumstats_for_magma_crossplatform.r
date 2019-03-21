@@ -142,7 +142,7 @@ format_sumstats_for_magma_crossplatform <- function(path) {
   if(sum(c("CHR","BP") %in% col_headers)==2 & sum("SNP" %in% col_headers)==0){
     print("There is no SNP column found within the data. It must be inferred from CHR and BP information.")
     print("Note: this process drops any SNPs which are not from Hapmap.")
-    genomebuild <- as.numeric(readline("Which genome build is the data from? 1 for GRCh37, 2 for GRCh38"))
+    genomebuild <- 1 #as.numeric(readline("Which genome build is the data from? 1 for GRCh37, 2 for GRCh38"))
     if(!genomebuild %in% c(1,2)){stop("Genome build must be entered as either 1 (for GRCh37) or 2 (for GRCh38)")}
     data("SNP_LOC_DATA")
     if(genomebuild==1){genomebuild="GRCh37"}else{genomebuild="GRCh38"}
@@ -195,13 +195,13 @@ format_sumstats_for_magma_crossplatform <- function(path) {
   # MAGMA cannot handle P-values as low as 3e-400... so convert them to zeros
   print("The following operation may take 30 seconds - 15 minutes depending on hardware and sumstats file size.")
   print("MAGMA cannot handle P-values as low as 3e-400.")
-  if (toupper(readline("Do you want MAGMA.celltyping to convert any (if) existing ones to zeroes? [ y/n ]: ")) %in% c("YES", "Y")) {
+  #if (toupper(readline("Do you want MAGMA.celltyping to convert any (if) existing ones to zeroes? [ y/n ]: ")) %in% c("YES", "Y")) {
     rows_of_data <- c(sumstats_file[1], sumstats_file[2]); col_headers = strsplit(rows_of_data[1], "\t")[[1]]
     sumstats <- read.table(path, stringsAsFactors = FALSE)
     for (i in seq_along(sumstats[,which(col_headers=="P")])) {
       if (sumstats[i,which(col_headers=="P")]=="P") {next} # To skip the header.
       sumstats[i,which(col_headers=="P")] <- as.numeric(as.character(sumstats[i,which(col_headers=="P")])) # This converts anything under 3e-400 to zeros.
-    }
+   # }
     write.table(x=sumstats, file=path, sep="\t", quote=FALSE, row.names = FALSE, col.names = FALSE); sumstats_file <- readLines(path)
   }
   
@@ -211,7 +211,7 @@ format_sumstats_for_magma_crossplatform <- function(path) {
     #whichN = which(col_headers %in% "N")
     print("The following operation may take 30 seconds - 15 minutes depending on hardware and sumstats file size.")
     print("Sometimes the N column is not all integers.")
-    if (toupper(readline("Do you want MAGMA.celltyping to round them up if existing? [ y/n ]: ")) %in% c("YES", "Y")) {
+    #if (toupper(readline("Do you want MAGMA.celltyping to round them up if existing? [ y/n ]: ")) %in% c("YES", "Y")) {
       rows_of_data <- c(sumstats_file[1], sumstats_file[2]); col_headers = strsplit(rows_of_data[1], "\t")[[1]]
       sumstats <- read.table(path, stringsAsFactors = FALSE)
       for (i in seq_along(sumstats[,which(col_headers=="N")])) {
@@ -219,7 +219,7 @@ format_sumstats_for_magma_crossplatform <- function(path) {
         sumstats[i,which(col_headers=="N")] <- round(as.numeric(as.character(sumstats[i,which(col_headers=="N")]))) # This converts anything under 3e-400 to zeros.
       }
       write.table(x=sumstats, file=path, sep="\t", quote=FALSE, row.names = FALSE, col.names = FALSE); sumstats_file <- readLines(path)
-    }
+    #}
   }
   
   # All rows should start with either SNP or rs... if they don't drop them
