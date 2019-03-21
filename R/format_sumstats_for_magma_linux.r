@@ -59,8 +59,9 @@ format_sumstats_for_magma_linux <- function(path){
             # Write the new column headers to file
             first_line = paste(col_headers,collapse = "\t")
             new_first_line = gsub(curColName,"CHR\tBP\tA2\tA1",paste(col_headers,collapse = "\t"))
-            sed_command = sprintf("sed -i '1s/%s/%s/' %s",first_line,new_first_line,path)
+            sed_command = sprintf("sed -i.bak '1s/%s/%s/' %s",first_line,new_first_line,path)
             system2("/bin/bash", args = c("-c", shQuote(sed_command)))
+            system(sprintf("rm %s.bak", path))
             col_headers = strsplit(new_first_line,"\t")[[1]]
             print(sprintf("Column %s has been replaced with CHR BP A2 A1",curColName))
             print(col_headers)
@@ -81,8 +82,9 @@ format_sumstats_for_magma_linux <- function(path){
             # Write the new column headers to file
             first_line = paste(col_headers,collapse = "\t")
             new_first_line = gsub(curColName,"CHR\tBP",paste(col_headers,collapse = "\t"))
-            sed_command = sprintf("sed -i '1s/%s/%s/' %s",first_line,new_first_line,path)
+            sed_command = sprintf("sed -i.bak '1s/%s/%s/' %s",first_line,new_first_line,path)
             system2("/bin/bash", args = c("-c", shQuote(sed_command)))
+            system(sprintf("rm %s.bak", path))
             col_headers = strsplit(new_first_line,"\t")[[1]]
             print(sprintf("Column %s has been replaced with CHR BP",curColName))
             print(col_headers)
@@ -126,7 +128,7 @@ format_sumstats_for_magma_linux <- function(path){
     # Check that all the vital columns are present
     con <- file(path,"r") ; rows_of_data <- readLines(con,n=2) ; close(con); col_headers = strsplit(rows_of_data[1],"\t")[[1]]
     for(key_column in c("SNP","CHR","BP","P","A1","A2")){
-        code_example = "sed -i '1s/p_value/P/' IQ.Sniekers.2017.txt"
+        code_example = "sed -i.bak '1s/p_value/P/' IQ.Sniekers.2017.txt"
         if(!key_column %in% col_headers){
             print("Header of file:")
             #system(sprintf("head -n 3 %s",path))
@@ -178,9 +180,9 @@ format_sumstats_for_magma_linux <- function(path){
         system2("/bin/bash", args = c("-c", shQuote(shCmd)))
     }
     # The above command converts 'P' to '0'... so revert that
-    shCmd = sprintf("sed -i '1s/0/P/' '%s'",path.expand(path))
+    shCmd = sprintf("sed -i.bak '1s/0/P/' '%s'",path.expand(path))
     system2("/bin/bash", args = c("-c", shQuote(shCmd)))
-    
+    system(sprintf("rm %s.bak", path.expand(path)))
     
     # Sometimes the N column is not all integers... so round it up
     con <- file(path,"r") ; rows_of_data <- readLines(con,n=2) ; close(con); col_headers = strsplit(rows_of_data[1],"\t")[[1]]
