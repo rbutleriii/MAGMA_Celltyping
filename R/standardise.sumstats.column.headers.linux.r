@@ -40,8 +40,9 @@ standardise.sumstats.column.headers.linux <- function(path){
     new_first_line = paste(column_headers,collapse = "\t")
     
     # Write the new column headers to file
-    sed_command = sprintf("sed -i '1s/%s/%s/' %s",first_line,new_first_line,path)
+    sed_command = sprintf("sed -i.bak '1s/%s/%s/' %s",first_line,new_first_line,path)
     system2("/bin/bash", args = c("-c", shQuote(sed_command)))
+    system(sprintf("rm %s.bak", path))
     
     #column_headers = strsplit(column_headers," ")[[1]]
     return(column_headers)
