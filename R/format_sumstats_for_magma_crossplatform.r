@@ -201,9 +201,9 @@ format_sumstats_for_magma_crossplatform <- function(path) {
     for (i in seq_along(sumstats[,which(col_headers=="P")])) {
       if (sumstats[i,which(col_headers=="P")]=="P") {next} # To skip the header.
       sumstats[i,which(col_headers=="P")] <- as.numeric(as.character(sumstats[i,which(col_headers=="P")])) # This converts anything under 3e-400 to zeros.
-   # }
+    }
     write.table(x=sumstats, file=path, sep="\t", quote=FALSE, row.names = FALSE, col.names = FALSE); sumstats_file <- readLines(path)
-  }
+  # }
   
   
   # Sometimes the N column is not all integers... so round it up
