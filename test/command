@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+num_lines=50000
+
+task(){
+  tar -xvzf statfiles.tar.gz
+  for k in *_test.txt
+    do
+      head -n $num_lines $k > temp_${k}
+      cp temp_${k} $k
+  done
+  rm temp_*
+  
+  time Rscript test.R $1 > ${1}_results.txt
+  head *_test.txt >> ${1}_results.txt
+}
+
+task "linux"
+task "crossplatform"
+
+
